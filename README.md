@@ -1,5 +1,12 @@
 # Fractal
 
+[![Travis](https://img.shields.io/travis/ddliu/fractal.svg?style=flat-square)](https://travis-ci.org/ddliu/fractal)
+[![godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/ddliu/fractal)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ddliu/fractal)](https://goreportcard.com/report/github.com/ddliu/fractal)
+[![cover.run](https://cover.run/go/github.com/ddliu/fractal.svg?style=flat&tag=golang-1.10)](https://cover.run/go?tag=golang-1.10&repo=github.com%2Fddliu%2Ffractal)
+
+
 Fractal is a Go package that makes it easy to work with dynamic and nested data types, with encoding/decoding support.
 
 ## Features
