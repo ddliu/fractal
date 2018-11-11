@@ -108,6 +108,18 @@ func (c *Context) Unmarshal(i interface{}) error {
 	return json.Unmarshal(b, i)
 }
 
+func (c *Context) UnmarshalJSON(jsonData []byte) error {
+	var data interface{}
+	json.Unmarshal(jsonData, &data)
+	c.data = data
+
+	return nil
+}
+
+func (c *Context) MarshalJSON() ([]byte, error) {
+	return json.Marshal(c.data)
+}
+
 func (c *Context) Exist(path string) bool {
 	_, err := c.GetValueE(path)
 	return err == nil

@@ -49,6 +49,14 @@ ctx := fractal.FromJson([]byte(`{"key1": "value1", "key2": {"key3": "value3"}}`)
 println(ctx.String("key2.key3"))
 ```
 
+Or with JSON unmarshal
+
+```go
+var ctx fractal.Context
+json.Unmarshal([]byte(`{"key1": "value1", "key2": {"key3": "value3"}}`), &ctx)
+println(ctx.String("key2.key3"))
+```
+
 Work with map
 
 ```go

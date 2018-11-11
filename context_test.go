@@ -4,6 +4,7 @@
 package fractal
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -49,6 +50,14 @@ func TestStruct(t *testing.T) {
 	}
 	c := New(v)
 	if c.String("Key2.Key3") != "Value3" {
+		t.Error()
+	}
+}
+
+func TestUnmarshalJSON(t *testing.T) {
+	var c Context
+	json.Unmarshal([]byte(`{"key": "value"}`), &c)
+	if c.String("key") != "value" {
 		t.Error()
 	}
 }
