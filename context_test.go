@@ -61,3 +61,34 @@ func TestUnmarshalJSON(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestKeys(t *testing.T) {
+	var c Context
+	json.Unmarshal([]byte(`{"key1": "value1", "key2": "value2"}`), &c)
+	keys := c.Keys()
+
+	if !listEquals(keys, []string{"key1", "key2"}) {
+		t.Error()
+	}
+}
+
+func listEquals(l1, l2 []string) bool {
+	if len(l1) != len(l2) {
+		return false
+	}
+
+	for _, v1 := range l1 {
+		exist := false
+		for _, v2 := range l2 {
+			if v1 == v2 {
+				exist = true
+			}
+		}
+
+		if !exist {
+			return false
+		}
+	}
+
+	return true
+}

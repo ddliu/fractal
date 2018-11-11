@@ -72,6 +72,21 @@ func (c *Context) GetValue(paths ...string) interface{} {
 	return v
 }
 
+func (c *Context) Keys() []string {
+	m, ok := toMap(c.data)
+	if !ok {
+		return nil
+	}
+
+	var result []string
+
+	for k, _ := range m {
+		result = append(result, k)
+	}
+
+	return result
+}
+
 func (c *Context) SetValue(path string, value interface{}) {
 	if path == "" || path == "." {
 		c.data = value
