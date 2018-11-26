@@ -74,8 +74,22 @@ func TestKeys(t *testing.T) {
 
 func TestList(t *testing.T) {
 	var c Context
-	json.Unmarshal([]byte(`{"key": ["a", "b"]}`), &c)
-	if c.String("key.1") != "b" {
+	json.Unmarshal([]byte(`{"key": ["a", {"b": "b"}]}`), &c)
+	if c.String("key.1.b") != "b" {
+		t.Error()
+	}
+	if c.String("key.0") != "a" {
+		t.Error()
+	}
+}
+
+func TestNested(t *testing.T) {
+	c := New(nil)
+	child := New(nil)
+	child.SetValue("a", "b")
+	c.SetValue("c", child)
+
+	if c.String("c.a") != "b" {
 		t.Error()
 	}
 }

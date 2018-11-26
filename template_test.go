@@ -8,8 +8,8 @@ import (
 )
 
 func TestTemplate(t *testing.T) {
-	tpl := `Author: ${author.name}; License: ${license}; Length: ${length()}`
-	expected := `Author: Dong; License: MIT; Length: 2`
+	tpl := `Author: ${author.name}; License: ${license}; Length: ${length()}; Language: ${languages.0.name}`
+	expected := `Author: Dong; License: MIT; Length: 3; Language: Golang`
 
 	c := New(nil)
 	c.SetValue("author", map[string]string{
@@ -17,6 +17,14 @@ func TestTemplate(t *testing.T) {
 		"email": "test@example.com",
 	})
 	c.SetValue("license", "MIT")
+	c.SetValue("languages", []map[string]string{
+		map[string]string{
+			"name": "Golang",
+		},
+		map[string]string{
+			"name": "Python",
+		},
+	})
 
 	parsed := c.Tpl(tpl)
 	if parsed != expected {

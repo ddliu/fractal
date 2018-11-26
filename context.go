@@ -226,6 +226,10 @@ func parseValue(data interface{}) (SimpleType, map[string]interface{}, []interfa
 	ref := reflect.ValueOf(data)
 	kind := ref.Kind()
 
+	if asContext, ok := data.(*Context); ok {
+		data = asContext.GetValue(".")
+	}
+
 	if kind == reflect.Struct {
 		// struct => map
 		numField := ref.NumField()
