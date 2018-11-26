@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-var re = regexp.MustCompile(`\$\{[a-zA-Z0-9\._]+\}`)
+var re = regexp.MustCompile(`\$\{[a-zA-Z0-9\._]+(\(\))?\}`)
 
 func (c *Context) Tpl(tpl string) string {
 	return re.ReplaceAllStringFunc(tpl, c.rep)

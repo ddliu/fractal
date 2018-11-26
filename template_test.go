@@ -8,8 +8,8 @@ import (
 )
 
 func TestTemplate(t *testing.T) {
-	tpl := `Author: ${author.name}; License: ${license}; `
-	expected := `Author: Dong; License: MIT; `
+	tpl := `Author: ${author.name}; License: ${license}; Length: ${length()}`
+	expected := `Author: Dong; License: MIT; Length: 2`
 
 	c := New(nil)
 	c.SetValue("author", map[string]string{

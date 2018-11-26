@@ -129,6 +129,10 @@ func (c *Context) SetValue(path string, value interface{}) {
 	c.data = setValueRecursive(c.data, parts, value)
 }
 
+// TODO: Merge
+// func (c *Context) Merge(value interface{}, deep bool, ommitEmpty bool) {
+// }
+
 func (c *Context) GetContextE(path string) (*Context, error) {
 	v, err := c.GetValueE(path)
 	if err != nil {
