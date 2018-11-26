@@ -6,6 +6,7 @@ package fractal
 import (
 	"encoding/json"
 	"errors"
+	"github.com/spf13/cast"
 	"reflect"
 	"strings"
 )
@@ -47,17 +48,37 @@ func (c *Context) GetValueE(paths ...string) (interface{}, error) {
 			continue
 		}
 
-		m, ok := toMap(v)
-		if !ok {
-			return nil, errors.New("Invalid data type")
+		t, m, l, _, err := parseValue(v)
+		if err != nil {
+			return nil, err
 		}
 
-		vv, ok := m[part]
-		if !ok {
-			return nil, errors.New("Path does not exist")
-		}
+		if t == TYPE_MAP {
+			if part == "length()" {
+				v = len(m)
+			} else {
+				vv, ok := m[part]
+				if !ok {
+					return nil, errors.New("Path does not exist")
+				}
+				v = vv
+			}
+		} else if t == TYPE_LIST {
+			if part == "length()" {
+				v = len(l)
+			} else {
+				idx, err := cast.ToIntE(part)
+				if err != nil {
+					return nil, err
+				}
 
-		v = vv
+				if idx < 0 || idx >= len(l) {
+					return nil, errors.New("Index out of range")
+				}
+
+				v = l[idx]
+			}
+		}
 	}
 
 	return v, nil
@@ -73,8 +94,8 @@ func (c *Context) GetValue(paths ...string) interface{} {
 }
 
 func (c *Context) Keys() []string {
-	m, ok := toMap(c.data)
-	if !ok {
+	_, m, _, _, _ := parseValue(c.data)
+	if m == nil {
 		return nil
 	}
 
@@ -85,6 +106,17 @@ func (c *Context) Keys() []string {
 	}
 
 	return result
+}
+
+func (c *Context) Length() int {
+	t, m, l, _, _ := parseValue(c.data)
+	if t == TYPE_MAP {
+		return len(m)
+	} else if t == TYPE_LIST {
+		return len(l)
+	} else {
+		return 0
+	}
 }
 
 func (c *Context) SetValue(path string, value interface{}) {
@@ -142,8 +174,11 @@ func (c *Context) Exist(path string) bool {
 
 func setValueRecursive(data interface{}, path []string, value interface{}) map[string]interface{} {
 	current := path[0]
-	dataMap, ok := toMap(data)
-	if !ok || dataMap == nil {
+	_, m, _, _, _ := parseValue(data)
+
+	dataMap := m
+
+	if dataMap == nil {
 		dataMap = make(map[string]interface{})
 	}
 	if len(path) == 1 {
@@ -174,11 +209,21 @@ func setValueRecursive(data interface{}, path []string, value interface{}) map[s
 	return dataMap
 }
 
-func toMap(data interface{}) (map[string]interface{}, bool) {
+type SimpleType uint8
+
+const (
+	TYPE_UNKNOWN SimpleType = iota
+	TYPE_MAP
+	TYPE_LIST
+	TYPE_SCALAR
+)
+
+func parseValue(data interface{}) (SimpleType, map[string]interface{}, []interface{}, interface{}, error) {
 	ref := reflect.ValueOf(data)
 	kind := ref.Kind()
 
 	if kind == reflect.Struct {
+		// struct => map
 		numField := ref.NumField()
 		result := make(map[string]interface{})
 		for i := 0; i < numField; i++ {
@@ -187,16 +232,28 @@ func toMap(data interface{}) (map[string]interface{}, bool) {
 			result[fieldName] = fieldValue
 		}
 
-		return result, true
+		return TYPE_MAP, result, nil, nil, nil
 	} else if kind == reflect.Map {
+		// map => map
 		result := make(map[string]interface{})
 
 		for _, k := range ref.MapKeys() {
 			result[k.String()] = ref.MapIndex(k).Interface()
 		}
 
-		return result, true
+		return TYPE_MAP, result, nil, nil, nil
+	} else if kind == reflect.Slice {
+		// slice => slice
+		length := ref.Len()
+		result := make([]interface{}, ref.Len())
+
+		for i := 0; i < length; i++ {
+			result[i] = ref.Index(i).Interface()
+		}
+
+		return TYPE_LIST, nil, result, nil, nil
 	} else {
-		return nil, false
+		// scalar
+		return TYPE_SCALAR, nil, nil, data, nil
 	}
 }

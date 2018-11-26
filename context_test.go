@@ -72,6 +72,22 @@ func TestKeys(t *testing.T) {
 	}
 }
 
+func TestList(t *testing.T) {
+	var c Context
+	json.Unmarshal([]byte(`{"key": ["a", "b"]}`), &c)
+	if c.String("key.1") != "b" {
+		t.Error()
+	}
+}
+
+func TestLength(t *testing.T) {
+	var c Context
+	json.Unmarshal([]byte(`{"key": ["a", "b"]}`), &c)
+	if c.Int("key.length()") != 2 {
+		t.Error()
+	}
+}
+
 func listEquals(l1, l2 []string) bool {
 	if len(l1) != len(l2) {
 		return false

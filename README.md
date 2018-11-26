@@ -89,3 +89,9 @@ println(c.Tpl(tpl))
 
 // output: Author: Dong; License: MIT; 
 ```
+
+## Dot Notation
+
+- `a.b`: Notation access
+- `a.b.1`: Array index
+- `a.b.length()`: Length of array or object
