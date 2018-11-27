@@ -223,12 +223,16 @@ const (
 )
 
 func parseValue(data interface{}) (SimpleType, map[string]interface{}, []interface{}, interface{}, error) {
+	if asContextRef, ok := data.(*Context); ok {
+		data = asContextRef.GetValue("")
+	}
+
+	if asContext, ok := data.(Context); ok {
+		data = asContext.GetValue("")
+	}
+
 	ref := reflect.ValueOf(data)
 	kind := ref.Kind()
-
-	if asContext, ok := data.(*Context); ok {
-		data = asContext.GetValue(".")
-	}
 
 	if kind == reflect.Struct {
 		// struct => map
