@@ -102,6 +102,41 @@ func TestLength(t *testing.T) {
 	}
 }
 
+func TestEmpty(t *testing.T) {
+	emptyTests := []interface{}{
+		nil,
+		0,
+		0.0,
+		false,
+		"",
+		[]int{},
+		map[string]string{},
+	}
+
+	noneEmptyTests := []interface{}{
+		1,
+		1.1,
+		true,
+		"test",
+		[]int{1},
+		map[string]string{"test": "test"},
+	}
+
+	for v := range emptyTests {
+		c := New(v)
+		if !c.IsEmpty() {
+			t.Error()
+		}
+	}
+
+	for v := range noneEmptyTests {
+		c := New(v)
+		if !c.IsEmpty() {
+			t.Error()
+		}
+	}
+}
+
 func listEquals(l1, l2 []string) bool {
 	if len(l1) != len(l2) {
 		return false

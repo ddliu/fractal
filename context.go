@@ -150,6 +150,43 @@ func (c *Context) GetContext(path string) *Context {
 	}
 }
 
+// Test for empty values
+func (c *Context) IsEmpty(paths ...string) bool {
+	v, err := c.GetValueE()
+	if err != nil {
+		return true
+	}
+
+	t, m, l, s, e := parseValue(v)
+	if e != nil {
+		return true
+	}
+
+	if t == TYPE_MAP {
+		return len(m) == 0
+	}
+
+	if t == TYPE_LIST {
+		return len(l) == 0
+	}
+
+	if t == s {
+		// if t.
+		switch tt := s.(type) {
+		case bool:
+			return !tt
+		case string:
+			return tt == ""
+		case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
+			return tt == 0
+		}
+
+		return true
+	}
+
+	return true
+}
+
 func (c *Context) Unmarshal(i interface{}) error {
 	b, err := json.Marshal(c.data)
 	if err != nil {
