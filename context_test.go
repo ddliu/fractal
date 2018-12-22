@@ -122,17 +122,17 @@ func TestEmpty(t *testing.T) {
 		map[string]string{"test": "test"},
 	}
 
-	for v := range emptyTests {
+	for _, v := range emptyTests {
 		c := New(v)
 		if !c.IsEmpty() {
-			t.Error()
+			t.Errorf("%v is not empty", v)
 		}
 	}
 
-	for v := range noneEmptyTests {
+	for _, v := range noneEmptyTests {
 		c := New(v)
-		if !c.IsEmpty() {
-			t.Error()
+		if c.IsEmpty() {
+			t.Errorf("%v is empty", v)
 		}
 	}
 }

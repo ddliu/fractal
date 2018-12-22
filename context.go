@@ -170,14 +170,36 @@ func (c *Context) IsEmpty(paths ...string) bool {
 		return len(l) == 0
 	}
 
-	if t == s {
+	if t == TYPE_SCALAR {
 		// if t.
 		switch tt := s.(type) {
 		case bool:
 			return !tt
 		case string:
 			return tt == ""
-		case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
+		case int:
+			return tt == 0
+		case int8:
+			return tt == 0
+		case int16:
+			return tt == 0
+		case int32:
+			return tt == 0
+		case int64:
+			return tt == 0
+		case uint:
+			return tt == 0
+		case uint8:
+			return tt == 0
+		case uint16:
+			return tt == 0
+		case uint32:
+			return tt == 0
+		case uint64:
+			return tt == 0
+		case float32:
+			return tt == 0
+		case float64:
 			return tt == 0
 		}
 
