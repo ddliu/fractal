@@ -92,6 +92,15 @@ func TestNested(t *testing.T) {
 	if c.String("c.a") != "b" {
 		t.Error()
 	}
+
+	c.SetValue("d", *child)
+
+	if c.String("d.a") != "b" {
+		t.Error()
+	}
+
+	// x, _ := c.MarshalJSON()
+	// print(string(x))
 }
 
 func TestLength(t *testing.T) {

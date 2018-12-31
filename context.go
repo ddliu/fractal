@@ -226,7 +226,7 @@ func (c *Context) UnmarshalJSON(jsonData []byte) error {
 	return nil
 }
 
-func (c *Context) MarshalJSON() ([]byte, error) {
+func (c Context) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.data)
 }
 
