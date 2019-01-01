@@ -166,3 +166,24 @@ func listEquals(l1, l2 []string) bool {
 
 	return true
 }
+
+func TestNil(t *testing.T) {
+	c := New(nil)
+	if c.GetValue("a") != nil {
+		t.Error()
+	}
+}
+
+func TestGetMap(t *testing.T) {
+	c := FromJson([]byte(`{"k1": "v1", "k2": "v2"}`))
+	if c.GetMapContext()["k2"].String() != "v2" {
+		t.Error()
+	}
+}
+
+func TestGetList(t *testing.T) {
+	c := FromJson([]byte(`[{"id": "id1"}, {"id": "id2"}]`))
+	if c.GetListContext()[1].String("id") != "id2" {
+		t.Error()
+	}
+}

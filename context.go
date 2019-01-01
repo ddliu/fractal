@@ -93,6 +93,55 @@ func (c *Context) GetValue(paths ...string) interface{} {
 	return v
 }
 
+func (c *Context) GetMapContextE(paths ...string) (map[string]*Context, error) {
+	t, m, _, _, err := parseValue(c.data)
+	if err != nil {
+		return nil, err
+	}
+	if t != TYPE_MAP {
+		return nil, errors.New("Not a map")
+	}
+
+	result := make(map[string]*Context)
+	for k, v := range m {
+		result[k] = New(v)
+	}
+
+	return result, nil
+}
+
+func (c *Context) GetMapContext(paths ...string) map[string]*Context {
+	v, err := c.GetMapContextE(paths...)
+	if err != nil {
+		return make(map[string]*Context)
+	}
+
+	return v
+}
+
+func (c *Context) GetListContextE(paths ...string) ([]*Context, error) {
+	t, _, l, _, err := parseValue(c.data)
+	if err != nil {
+		return nil, err
+	}
+	if t != TYPE_LIST {
+		return nil, errors.New("Not a list")
+	}
+
+	var result []*Context
+	for _, v := range l {
+		result = append(result, New(v))
+	}
+
+	return result, nil
+}
+
+func (c *Context) GetListContext(paths ...string) []*Context {
+	v, _ := c.GetListContextE(paths...)
+
+	return v
+}
+
 func (c *Context) Keys() []string {
 	_, m, _, _, _ := parseValue(c.data)
 	if m == nil {
