@@ -175,15 +175,15 @@ func TestNil(t *testing.T) {
 }
 
 func TestGetMap(t *testing.T) {
-	c := FromJson([]byte(`{"k1": "v1", "k2": "v2"}`))
-	if c.GetMapContext()["k2"].String() != "v2" {
+	c := FromJson([]byte(`{"a":{"k1": "v1", "k2": "v2"}}`))
+	if c.GetMapContext("a")["k2"].String() != "v2" {
 		t.Error()
 	}
 }
 
 func TestGetList(t *testing.T) {
-	c := FromJson([]byte(`[{"id": "id1"}, {"id": "id2"}]`))
-	if c.GetListContext()[1].String("id") != "id2" {
+	c := FromJson([]byte(`{"a":[{"id": "id1"}, {"id": "id2"}]}`))
+	if c.GetListContext("a")[1].String("id") != "id2" {
 		t.Error()
 	}
 }

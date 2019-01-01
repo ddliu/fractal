@@ -94,7 +94,12 @@ func (c *Context) GetValue(paths ...string) interface{} {
 }
 
 func (c *Context) GetMapContextE(paths ...string) (map[string]*Context, error) {
-	t, m, _, _, err := parseValue(c.data)
+	value, err := c.GetValueE(paths...)
+	if err != nil {
+		return nil, err
+	}
+
+	t, m, _, _, err := parseValue(value)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +125,11 @@ func (c *Context) GetMapContext(paths ...string) map[string]*Context {
 }
 
 func (c *Context) GetListContextE(paths ...string) ([]*Context, error) {
-	t, _, l, _, err := parseValue(c.data)
+	value, err := c.GetValueE(paths...)
+	if err != nil {
+		return nil, err
+	}
+	t, _, l, _, err := parseValue(value)
 	if err != nil {
 		return nil, err
 	}
