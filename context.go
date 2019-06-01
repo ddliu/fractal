@@ -6,9 +6,10 @@ package fractal
 import (
 	"encoding/json"
 	"errors"
-	"github.com/spf13/cast"
 	"reflect"
 	"strings"
+
+	"github.com/spf13/cast"
 )
 
 func New(data interface{}) *Context {
@@ -78,6 +79,8 @@ func (c *Context) GetValueE(paths ...string) (interface{}, error) {
 
 				v = l[idx]
 			}
+		} else {
+			return nil, errors.New("Path does not exist")
 		}
 	}
 

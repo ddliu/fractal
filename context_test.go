@@ -182,8 +182,21 @@ func TestGetMap(t *testing.T) {
 }
 
 func TestGetList(t *testing.T) {
-	c := FromJson([]byte(`{"a":[{"id": "id1"}, {"id": "id2"}]}`))
+	c := FromJson([]byte(`{"a":[{"id": "id1"}, {"id": "id2"}, "simple string"]}`))
 	if c.GetListContext("a")[1].String("id") != "id2" {
 		t.Error()
 	}
+
+	if c.GetListContext("a")[2].String() != "simple string" {
+		t.Error()
+	}
+}
+
+func TestStringNoChild(t *testing.T) {
+	c := New("hello")
+
+	if c.String("none.exist") != "" {
+		t.Error(c.String("none.exist") + "!=" + "\"\"")
+	}
+
 }
