@@ -198,5 +198,25 @@ func TestStringNoChild(t *testing.T) {
 	if c.String("none.exist") != "" {
 		t.Error(c.String("none.exist") + "!=" + "\"\"")
 	}
+}
 
+func TestNestedInStruct(t *testing.T) {
+	type MyStruct struct {
+		Name string  `json:"name"`
+		Ctx  Context `json:"ctx"`
+	}
+
+	data := MyStruct{
+		Name: "Hello",
+	}
+
+	data.Ctx.SetValue("name1", "value1")
+
+	data1 := MyStruct{}
+
+	b, _ := json.Marshal(data)
+	err := json.Unmarshal(b, &data1)
+	if err != nil || data1.Ctx.String("name1") != "value1" {
+		t.Error("Test tested failed", err, data1)
+	}
 }
