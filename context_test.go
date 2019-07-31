@@ -1,4 +1,4 @@
-// Copyright 2018 Liu Dong <ddliuhb@gmail.com>.
+// Copyright 2018-2019 Liu Dong <ddliuhb@gmail.com>.
 // Licensed under the MIT license.
 
 package fractal
