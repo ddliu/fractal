@@ -213,7 +213,7 @@ func (c *Context) GetContext(path string) *Context {
 
 // Test for empty values
 func (c *Context) IsEmpty(paths ...string) bool {
-	v, err := c.GetValueE()
+	v, err := c.GetValueE(paths...)
 	if err != nil {
 		return true
 	}

@@ -220,3 +220,28 @@ func TestNestedInStruct(t *testing.T) {
 		t.Error("Test tested failed", err, data1)
 	}
 }
+
+func Test1(t *testing.T) {
+	data1 := New(map[string]interface{}{
+		"a": "a",
+		"b": "b",
+	})
+
+	data2 := New(map[string]interface{}{
+		"c": "c",
+		"d": "d",
+	})
+
+	if !data1.IsEmpty("data") {
+		t.Error()
+	}
+
+	data1.SetValue("data", data2)
+	if data1.IsEmpty("data") {
+		t.Error()
+	}
+
+	if data1.String("data.c") != "c" {
+		t.Error()
+	}
+}
