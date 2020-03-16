@@ -30,6 +30,22 @@ type Context struct {
 	data interface{}
 }
 
+func valueOfContext(v interface{}) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+
+	if vv, ok := v.(Context); ok {
+		return vv.GetValueE()
+	}
+
+	if vv, ok := v.(*Context); ok {
+		return vv.GetValueE()
+	}
+
+	return v, nil
+}
+
 func (c *Context) GetValueE(paths ...string) (interface{}, error) {
 	var path string
 	if len(paths) == 0 {
@@ -39,7 +55,7 @@ func (c *Context) GetValueE(paths ...string) (interface{}, error) {
 	}
 
 	if path == "" || path == "." {
-		return c.data, nil
+		return valueOfContext(c.data)
 	}
 
 	parts := strings.Split(path, ".")
@@ -84,7 +100,7 @@ func (c *Context) GetValueE(paths ...string) (interface{}, error) {
 		}
 	}
 
-	return v, nil
+	return valueOfContext(v)
 }
 
 func (c *Context) GetValue(paths ...string) interface{} {
