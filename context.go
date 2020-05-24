@@ -196,6 +196,25 @@ func (c *Context) Length() int {
 	}
 }
 
+func (c *Context) GetContextWithTypeE(paths ...string) (SimpleType, *Context, error) {
+	value, err := c.GetValueE(paths...)
+	if err != nil {
+		return TYPE_UNKNOWN, nil, err
+	}
+	t, _, _, _, err := parseValue(value)
+	if err != nil {
+		return TYPE_UNKNOWN, nil, err
+	}
+
+	return t, New(value), nil
+}
+
+func (c *Context) GetContextWithType(paths ...string) (SimpleType, *Context) {
+	t, v, _ := c.GetContextWithTypeE(paths...)
+
+	return t, v
+}
+
 func (c *Context) SetValue(path string, value interface{}) {
 	if path == "" || path == "." {
 		c.data = value
