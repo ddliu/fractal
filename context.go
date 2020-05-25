@@ -326,6 +326,11 @@ func (c Context) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.data)
 }
 
+func (c Context) MustMarshalJSON() []byte {
+	b, _ := json.Marshal(c.data)
+	return b
+}
+
 func (c *Context) Exist(path string) bool {
 	_, err := c.GetValueE(path)
 	return err == nil
